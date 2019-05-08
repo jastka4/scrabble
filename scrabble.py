@@ -3,6 +3,7 @@
 
 import itertools
 import numpy
+import random
 
 board = [[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
          [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
@@ -20,7 +21,25 @@ board = [[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 
          [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
          [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']]
 
+words = []
+words.append(['T', 'E', 'A'])
+words.append(['H', 'U', 'G'])
+words.append(['B', 'U', 'G'])
+words.append(['F', 'I', 'N', 'D'])
+words.append(['T', 'H', 'A', 'N', 'K'])
 
-itertools.permutations([1,2,3])
+letters = ['E'] * 12 + ['A'] * 9 + ['I'] * 9 + ['O'] * 8 + ['N'] * 6 + ['R'] * 6 + ['T'] * 6 + ['L'] * 4 + ['S'] * 4 + ['U'] * 4 + ['D'] * 4 + ['G'] * 3 + ['B'] * 2 + ['C'] * 2 + ['M'] * 2 + ['P'] * 2 + ['F'] * 2 + ['H'] * 2 + ['V'] * 2 + ['W'] * 2 + ['Y'] * 2 + ['K'] + ['J'] + ['X'] + ['Q'] + ['Z']
 
+def updateMyLetters(myLetters):
+    for x in xrange(7 - len(myLetters)):
+        myLetters.extend(letters.pop(letters.index(random.choice(letters))))
+    return myLetters
+
+myLetters = updateMyLetters([])
+
+# while(len(letters) > 0):
 print(numpy.matrix(board))
+
+for x in itertools.permutations(words[0]):
+     print(x)
+    
