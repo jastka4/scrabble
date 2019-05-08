@@ -42,4 +42,19 @@ print(numpy.matrix(board))
 
 for x in itertools.permutations(words[0]):
      print(x)
-    
+
+# scanning left-right looking for neighbours top-down
+# for x in range(len(board)):
+#     for y in range(len(board[x])):
+#         if board[x][y].strip():
+#             for neigbour in range(x, x + 7):
+#                 if (neigbour < len(board)):
+#                     print board[neigbour][y]
+
+# scanning top-down looking for neighbours left-right
+for x in range(len(board)):
+    for y in range(len(board[x])):
+        if board[x][y].strip():
+            for neigbour in range(y, y + 7):
+                if (neigbour < len(board)):
+                    print board[x][neigbour]
