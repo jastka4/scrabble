@@ -4,8 +4,7 @@ import itertools
 import numpy
 import random
 
-# TODO - don't include already existing words in available words list (new word is shorter than the old word)
-# TODO - check if on the left side of a word is a letter, then not include chars list
+
 # TODO - put letters on the board
 
 def update_my_letters(my_letters, all_letters):
@@ -55,38 +54,50 @@ def fill_empty_places(my_letters, board_letters):
     return possibilities
 
 
+def put_word_on_board(board, available_words, direction):
+    word = available_words[0]
+    if direction is 'horizontal':
+        return
+    elif direction is 'vertical':
+        return
+
+
 def scan_horizontally(board, my_letters, words):
     # scanning left-right looking for neighbours top-down
     for x in range(len(board)):
         for y in range(len(board[x])):
-            if board[x][y].strip():
+            if board[x][y].strip() and not board[x - 1][y].strip():
                 chars = []
                 for neighbour in range(x, x + 7 + 1):
                     if neighbour < len(board):
                         chars.append(board[neighbour][y])
                 available_words = get_available_words(fill_empty_places(my_letters, chars), words)
+
                 if available_words:
-                    print chars
-                    print available_words
+                    for word in available_words:
+                        if not len(word) <= len(chars) - get_empty_places(chars):
+                            print chars
+                            print available_words
+                            put_word_on_board(board, available_words, 'horizontal')
 
 
 def scan_vertically(board, my_letters, words):
     # scanning top-down looking for neighbours left-right
     for x in range(len(board)):
         for y in range(len(board[x])):
-            if board[x][y].strip():
+            if board[x][y].strip() and not board[x][y - 1].strip():
                 chars = []
                 for neighbour in range(y, y + 7 + 1):
                     if neighbour < len(board):
                         chars.append(board[x][neighbour])
                 available_words = get_available_words(fill_empty_places(my_letters, chars), words)
+
                 if available_words:
-                    print chars
-                    print available_words
-
-
-def get_permutations_of_my_letters_and_board(my_letters, board_letters):
-    return
+                    for word in available_words:
+                        if not len(word) <= len(chars) - get_empty_places(chars):
+                            print chars
+                            print available_words
+                            put_word_on_board(board, available_words, 'vertical')
 
 
 def main():
@@ -118,6 +129,7 @@ def main():
     # while(len(letters) > 0):
     print(numpy.matrix(board))
 
+    # for i in range(10):
     scan_horizontally(board, my_letters, words)
     scan_vertically(board, my_letters, words)
 
