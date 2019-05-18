@@ -5,7 +5,9 @@ import numpy
 import random
 
 
-# TODO - put letters on the board
+# TODO - check if scanners can be combined into one method
+# TODO - add conditions to check if a new word is too close to another word (Scrabble rules)
+# TODO - add a list of words to be read from a file
 
 def update_my_letters(my_letters, all_letters):
     for x in xrange(7 - len(my_letters)):
@@ -54,12 +56,21 @@ def fill_empty_places(my_letters, board_letters):
     return possibilities
 
 
-def put_word_on_board(board, available_words, direction):
+def put_word_on_board(board, available_words, direction, x, y):
+    temp_board = list(board)
     word = available_words[0]
+    word_length = len(word)
+
+    print "New word: ".join(word)
+
     if direction is 'horizontal':
-        return
+        for char_pos in range(word_length):
+            board[x + char_pos][y] = available_words[0][char_pos]
     elif direction is 'vertical':
-        return
+        for char_pos in range(word_length):
+            board[x][y + char_pos] = available_words[0][char_pos]
+
+    return temp_board
 
 
 def scan_horizontally(board, my_letters, words):
@@ -73,16 +84,16 @@ def scan_horizontally(board, my_letters, words):
                         chars.append(board[neighbour][y])
                 available_words = get_available_words(fill_empty_places(my_letters, chars), words)
 
+                for word in available_words:
+                    if len(word) <= len(chars) - get_empty_places(chars):
+                        available_words.remove(word)
+
                 if available_words:
-                    for word in available_words:
-                        if not len(word) <= len(chars) - get_empty_places(chars):
-                            print chars
-                            print available_words
-                            put_word_on_board(board, available_words, 'horizontal')
+                    put_word_on_board(board, available_words, 'horizontal', x, y)
 
 
 def scan_vertically(board, my_letters, words):
-    # scanning top-down looking for neighbours left-right
+    # scanning left-right looking for neighbours left-right
     for x in range(len(board)):
         for y in range(len(board[x])):
             if board[x][y].strip() and not board[x][y - 1].strip():
@@ -92,12 +103,12 @@ def scan_vertically(board, my_letters, words):
                         chars.append(board[x][neighbour])
                 available_words = get_available_words(fill_empty_places(my_letters, chars), words)
 
+                for word in available_words:
+                    if len(word) <= len(chars) - get_empty_places(chars):
+                        available_words.remove(word)
+
                 if available_words:
-                    for word in available_words:
-                        if not len(word) <= len(chars) - get_empty_places(chars):
-                            print chars
-                            print available_words
-                            put_word_on_board(board, available_words, 'vertical')
+                    put_word_on_board(board, available_words, 'vertical', x , y)
 
 
 def main():
@@ -129,9 +140,11 @@ def main():
     # while(len(letters) > 0):
     print(numpy.matrix(board))
 
-    # for i in range(10):
-    scan_horizontally(board, my_letters, words)
-    scan_vertically(board, my_letters, words)
+    for i in range(10):
+        scan_horizontally(board, my_letters, words)
+        scan_vertically(board, my_letters, words)
+
+    print(numpy.matrix(board))
 
 
 if __name__ == "__main__":
